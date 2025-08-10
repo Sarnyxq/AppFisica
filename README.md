@@ -231,8 +231,12 @@ Utilizza il sistema di Issues per segnalare:
 
 Per supporto e domande:
 - **Issues**: Utilizza il sistema di Issues di GitHub
-- **Documentazione**: Consulta `istruzioni3.md` per dettagli implementazione
-- **Test**: Esegui `test-storia-button.js` per verifiche automatiche
+- **Documentazione**: 
+  - Consulta `istruzioni3.md` per sistema storia
+  - Consulta `istruzioni2.md` per supporto S Pen ⭐ NUOVO
+- **Test**: 
+  - Esegui `test-storia-button.js` per verifiche storia
+  - Esegui `testSPenSupport()` per verifiche S Pen ⭐ NUOVO
 
 ## 📄 Licenza
 
@@ -241,6 +245,17 @@ Questo progetto è rilasciato sotto licenza MIT. Vedi il file `LICENSE` per i de
 ---
 
 ### 🎯 Caratteristiche Distintive
+
+- **Apprendimento Gamificato**: Trasforma lo studio della fisica in un'avventura
+- **Narrativa Immersiva**: Storie coinvolgenti per ogni concetto
+- **Progressione Motivante**: Sistema di badge e ricompense
+- **S Pen Samsung Ottimizzato**: Supporto nativo per Galaxy S6 Lite e altri dispositivi Samsung ⭐ NUOVO
+- **Multi-Pen Support**: Compatibilità con Surface Pro, S Pen Samsung, e input touch
+- **Accessibilità Universale**: Utilizzabile da tutti, inclusi utenti con disabilità
+- **Performance Ottimali**: Caricamento rapido e animazioni fluide
+- **Cross-Platform**: Funziona su desktop, tablet e mobile
+
+**AppFisica - Dove la Fisica Diventa Avventura! ⚡🧙‍♂️✏️**
 
 - **Apprendimento Gamificato**: Trasforma lo studio della fisica in un'avventura
 - **Narrativa Immersiva**: Storie coinvolgenti per ogni concetto
