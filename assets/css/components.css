@@ -710,3 +710,70 @@ textarea:focus {
         min-width: 200px;
     }
 }
+
+/* === S PEN SAMSUNG SUPPORT === */
+
+/* Animazioni S Pen */
+@keyframes slideInScale {
+    from {
+        transform: translateX(100%) scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+}
+
+/* Notifiche S Pen */
+.spen-notification {
+    pointer-events: none;
+    user-select: none;
+    animation: slideInScale 0.3s ease-out;
+}
+
+/* Stili specifici per S Pen */
+.spen-active .drawing-canvas {
+    touch-action: none; /* Migliora palm rejection */
+}
+
+/* Cursor personalizzati migliorati per S Pen */
+.spen-mode-pen {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="blue" opacity="0.7"/><circle cx="12" cy="12" r="1" fill="white"/></svg>') 12 12, crosshair;
+}
+
+.spen-mode-eraser {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><rect x="8" y="8" width="8" height="8" fill="red" opacity="0.6" rx="2"/><rect x="10" y="10" width="4" height="4" fill="white" opacity="0.8"/></svg>') 12 12, crosshair;
+}
+
+/* Effetti canvas per S Pen */
+.canvas-spen-mode {
+    transition: filter 0.2s ease;
+}
+
+.canvas-spen-eraser {
+    filter: hue-rotate(15deg) brightness(1.1);
+}
+
+.canvas-spen-pen {
+    filter: none;
+}
+
+/* Indicatori UI S Pen */
+.spen-indicator {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    z-index: 9999;
+    transition: all 0.3s ease;
+}
+
+.spen-indicator.hidden {
+    opacity: 0;
+    transform: translateY(20px);
+}

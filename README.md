@@ -39,6 +39,36 @@ AppFisica è un'applicazione interattiva per l'apprendimento della fisica attrav
 - ✅ Accessibilità WCAG 2.1 compliant
 - ✅ Focus management per screen readers
 
+### 🖊️ **Supporto S Pen Samsung** ⭐ **NUOVA**
+
+#### Samsung Galaxy S6 Lite Ottimizzato
+- **Switch Automatico**: Modalità penna/gomma tramite pulsante laterale S Pen
+- **Palm Rejection Avanzata**: Ignora tocchi accidentali della mano
+- **Pressure Sensitivity**: Spessore linea basato su pressione della penna
+- **Feedback Visivo**: Notifiche eleganti per cambio modalità automatico
+
+#### Come Usare S Pen
+1. Apri il modal di disegno in una sfida
+2. Usa S Pen normalmente per disegnare (modalità penna ✏️)
+3. Premi e tieni premuto il pulsante laterale per modalità gomma (🧹)
+4. Rilascia il pulsante per tornare alla modalità penna
+5. Feedback visivo automatico mostra modalità corrente
+
+#### Caratteristiche Tecniche
+- ✅ Rilevamento automatico dispositivi Samsung compatibili
+- ✅ Gestione eventi pointer ottimizzata per S Pen
+- ✅ Debouncing anti-flickering per switch modalità
+- ✅ Configurazione palm rejection regolabile
+- ✅ Test suite completa per validazione funzionalità
+- ✅ Performance ottimizzate per drawing real-time
+- ✅ Compatibilità mantenuta con Surface Pro e altri dispositivi
+
+#### Dispositivi Supportati
+- **Samsung Galaxy S6 Lite** (target primario) 
+- **Altri dispositivi Samsung con S Pen** (supporto generico)
+- **Surface Pro 7** (supporto esistente mantenuto)
+- **Fallback touch/mouse** (dispositivi senza penna)
+
 ## 🛠️ Tecnologie Utilizzate
 
 ### Frontend
@@ -104,12 +134,28 @@ php -S localhost:8000
 ## 🧪 Testing
 
 ### Test Automatizzato
-L'applicazione include uno script di test automatizzato per verificare il funzionamento del pulsante Storia:
+L'applicazione include script di test automatizzati:
 
 ```javascript
+// Test sistema Storia
 // Apri la console del browser e esegui:
 // Copia e incolla il contenuto di test-storia-button.js
+
+// Test S Pen Samsung ⭐ NUOVO
+// Apri la console del browser e esegui:
+testSPenSupport();
 ```
+
+### Test S Pen Samsung
+1. **Setup**: Apri AppFisica su Samsung Galaxy S6 Lite
+2. **Console Test**: Esegui `testSPenSupport()` in console browser
+3. **Test Rilevamento**: Verifica rilevamento automatico S Pen
+4. **Test Switch Modalità**: 
+   - Disegna normalmente con S Pen (modalità penna)
+   - Premi pulsante laterale S Pen (modalità gomma)
+   - Verifica notifica visiva cambio modalità
+   - Rilascia pulsante (ritorno modalità penna)
+5. **Test Palm Rejection**: Tocca schermo con mano mentre usi S Pen
 
 ### Test Manuali
 1. **Test Base**: Apri l'applicazione e completa una sfida
@@ -117,6 +163,7 @@ L'applicazione include uno script di test automatizzato per verificare il funzio
 3. **Test Modal**: Clicca il pulsante e verifica apertura modal
 4. **Test Responsive**: Testa su dispositivi diversi
 5. **Test Accessibilità**: Naviga con tastiera e screen reader
+6. **Test S Pen**: Segui procedura test S Pen sopra
 
 ## 🎨 Personalizzazione
 
@@ -155,7 +202,17 @@ Utilizza il sistema di Issues per segnalare:
 
 ## 📋 Changelog
 
-### Versione 3.1.0 ⭐ **NUOVA**
+### Versione 3.2.0 ⭐ **NUOVA**
+- **Aggiunto**: Supporto completo S Pen Samsung Galaxy S6 Lite
+- **Aggiunto**: Switch automatico penna/gomma tramite pulsante laterale
+- **Aggiunto**: Palm rejection avanzata per S Pen
+- **Aggiunto**: Pressure sensitivity ottimizzata 
+- **Aggiunto**: Feedback visivo elegante per cambio modalità
+- **Aggiunto**: Test suite dedicata per S Pen (`test-spen.js`)
+- **Migliorato**: Compatibilità multi-dispositivo (Samsung + Surface Pro)
+- **Migliorato**: Performance sistema disegno per dispositivi pen
+
+### Versione 3.1.0
 - **Aggiunto**: Pulsante Storia per sfide completate
 - **Aggiunto**: Modal di revisione storia con animazioni
 - **Aggiunto**: Sistema di accessibilità completo
