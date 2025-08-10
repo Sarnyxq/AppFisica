@@ -285,7 +285,7 @@ class Modals {
                     <div class="challenge-footer p-4 md:p-6 flex flex-col sm:flex-row justify-between items-center gap-4 bg-pergamena-dark/60">
                         <p class="text-sm md:text-lg font-bold text-ink-dark text-center sm:text-left">Ricompensa: <span class="text-gold">${challenge.exp} EXP + ${challenge.badge.icon} ${challenge.badge.name}</span></p>
                         <div class="flex gap-2 w-full sm:w-auto justify-center">
-                            <button id="complete-challenge-btn-mobile" class="btn-primary font-dnd text-lg py-2 px-6 rounded-lg md:hidden">🔨 Forgia il Sigillo</button>
+                            <button id="complete-challenge-btn-footer" class="btn-primary font-dnd text-sm md:text-base py-2 px-4 md:px-6 rounded-lg">🔨 Forgia</button>
                             <button id="cancel-modal-btn" class="btn-secondary py-2 px-4 rounded-lg">Annulla</button>
                         </div>
                     </div>
@@ -612,8 +612,8 @@ class Modals {
             
             document.addEventListener('canvasChanged', this._canvasChangeHandler = () => this.debouncedCanvasSave());
             
-            const completeMobile = this.challengeModal.querySelector('#complete-challenge-btn-mobile');
-            if (completeMobile) completeMobile.addEventListener('click', () => this.handleCompleteChallenge());
+            const completeFooter = this.challengeModal.querySelector('#complete-challenge-btn-footer');
+            if (completeFooter) completeFooter.addEventListener('click', () => this.handleCompleteChallenge());
         }
         
         // Gestione ESC key per tutti i tipi di modale

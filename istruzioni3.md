@@ -43,10 +43,10 @@ Aggiungere un pulsante "📖 Storia" che appare sotto il pulsante "Affronta" nel
 - [x] **6.6** Testare con diversi stati di progresso utente
 
 ### FASE 7: Documentazione e Finalizzazione
-- [ ] **7.1** Aggiornare documentazione di progetto
-- [ ] **7.2** Creare screenshot delle nuove funzionalità
-- [ ] **7.3** Testare integrazione con sistemi esistenti
-- [ ] **7.4** Ottimizzazioni finali delle performance
+- [x] **7.1** Aggiornare documentazione di progetto
+- [x] **7.2** Creare screenshot delle nuove funzionalità
+- [x] **7.3** Testare integrazione con sistemi esistenti
+- [x] **7.4** Ottimizzazioni finali delle performance
 
 ---
 
