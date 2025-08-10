@@ -155,5 +155,43 @@
             }
         });
     </script>
+
+    <!-- Story Review Modal (per rileggere storie di sfide completate) -->
+    <div id="story-review-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 z-[90] flex items-center justify-center p-4"
+         role="dialog" aria-modal="true" aria-labelledby="story-review-title" aria-describedby="story-review-subtitle">
+        <div class="bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 rounded-xl max-w-4xl w-full max-h-[85vh] overflow-hidden shadow-2xl border-2 border-amber-400">
+            <!-- Header del Modal -->
+            <div class="bg-gradient-to-r from-amber-600 to-amber-500 p-6 text-center relative">
+                <button id="story-review-close-btn" class="absolute top-4 right-4 text-amber-100 hover:text-white transition-colors text-2xl"
+                        aria-label="Chiudi modal storia">
+                    ✕
+                </button>
+                <div class="flex items-center justify-center gap-3 mb-2">
+                    <span id="story-review-icon" class="text-4xl" aria-hidden="true">📖</span>
+                    <h2 id="story-review-title" class="text-2xl font-dnd text-amber-100">
+                        Storia della Sfida
+                    </h2>
+                </div>
+                <p id="story-review-subtitle" class="text-amber-200 text-sm">
+                    Sfida completata - Rileggi la narrazione
+                </p>
+            </div>
+
+            <!-- Contenuto scrollabile -->
+            <div class="overflow-y-auto max-h-[calc(85vh-140px)] p-6" role="main">
+                <div id="story-review-content" class="space-y-6">
+                    <!-- Il contenuto verrà caricato dinamicamente -->
+                </div>
+            </div>
+
+            <!-- Footer con azioni -->
+            <div class="bg-gradient-to-r from-purple-800 to-indigo-800 p-4 flex justify-center gap-4">
+                <button id="story-review-close-footer-btn" class="btn-secondary px-6 py-2 rounded-lg"
+                        aria-label="Chiudi modal e torna alla vista precedente">
+                    ✨ Chiudi
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
