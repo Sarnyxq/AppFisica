@@ -77,6 +77,9 @@ class HeaderComponent {
                             🏆 Sala dei Trofei
                         </button>
                         <button id="diary-btn" class="nav-btn btn-primary font-dnd text-lg py-2 px-4 rounded-lg">
+                            📖 Diario
+                        </button>
+                        <button id="memory-btn" class="nav-btn btn-primary font-dnd text-lg py-2 px-4 rounded-lg">
                             🧠 Memoria
                         </button>
                         <button id="settings-btn" class="nav-btn btn-primary font-dnd text-lg py-2 px-4 rounded-lg">
@@ -94,6 +97,9 @@ class HeaderComponent {
                                 🏆 Trofei
                             </button>
                             <button class="mobile-nav-btn btn-secondary text-sm py-2 px-3 rounded" data-view="diary">
+                                📖 Diario
+                            </button>
+                            <button class="mobile-nav-btn btn-secondary text-sm py-2 px-3 rounded" data-view="memory">
                                 🧠 Memoria
                             </button>
                             <button class="mobile-nav-btn btn-secondary text-sm py-2 px-3 rounded" data-view="settings">
@@ -114,11 +120,13 @@ class HeaderComponent {
         const mapBtn = document.getElementById('map-btn');
         const trophyBtn = document.getElementById('trophy-hall-btn');
         const diaryBtn = document.getElementById('diary-btn');
+        const memoryBtn = document.getElementById('memory-btn');
         const settingsBtn = document.getElementById('settings-btn');
 
         if (mapBtn) mapBtn.addEventListener('click', () => this.navigate('map'));
         if (trophyBtn) trophyBtn.addEventListener('click', () => this.navigate('trophy'));
         if (diaryBtn) diaryBtn.addEventListener('click', () => this.navigate('diary'));
+        if (memoryBtn) memoryBtn.addEventListener('click', () => this.navigate('memory'));
         if (settingsBtn) settingsBtn.addEventListener('click', () => this.navigate('settings'));
 
         // Menu mobile
@@ -165,6 +173,9 @@ class HeaderComponent {
                 if (window.trophyHall) trophyHall.render();
                 break;
             case 'diary':
+                if (window.diaryHall) diaryHall.render();
+                break;
+            case 'memory':
                 if (window.memoryHall) memoryHall.render();
                 break;
             case 'settings':
@@ -195,6 +206,7 @@ class HeaderComponent {
             map: 'map-btn',
             trophy: 'trophy-hall-btn',
             diary: 'diary-btn',
+            memory: 'memory-btn',
             settings: 'settings-btn'
         };
 

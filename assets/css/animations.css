@@ -423,3 +423,97 @@ textarea:focus {
 .bounce {
   animation: bounceIn 0.5s ease-out;
 }
+
+/* === DIARY ANIMATIONS === */
+
+/* Animazione di comparsa per le card del diario */
+@keyframes diary-card-appear {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animazione per il cambio di modalità di vista */
+@keyframes view-mode-switch {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Animazione per l'aggiunta di annotazioni */
+@keyframes annotation-highlight {
+  0% {
+    background-color: rgba(245, 158, 11, 0.2);
+    border-color: #f59e0b;
+  }
+  50% {
+    background-color: rgba(245, 158, 11, 0.4);
+    border-color: #d97706;
+  }
+  100% {
+    background-color: rgba(245, 158, 11, 0.2);
+    border-color: #f59e0b;
+  }
+}
+
+/* Animazione per le conquiste sbloccate */
+@keyframes achievement-unlock {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 8px 24px rgba(245, 158, 11, 0.6);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+  }
+}
+
+/* Stagger animation per le card del diario */
+.diary-card:nth-child(1) { animation-delay: 0ms; }
+.diary-card:nth-child(2) { animation-delay: 100ms; }
+.diary-card:nth-child(3) { animation-delay: 200ms; }
+.diary-card:nth-child(4) { animation-delay: 300ms; }
+.diary-card:nth-child(5) { animation-delay: 400ms; }
+
+/* Classi di animazione del diario */
+.diary-card {
+  animation: diary-card-appear 0.6s ease-out both;
+}
+
+.view-mode-content {
+  animation: view-mode-switch 0.4s ease-out;
+}
+
+.annotation-added {
+  animation: annotation-highlight 1s ease-in-out;
+}
+
+.achievement-unlocked {
+  animation: achievement-unlock 0.8s ease-out;
+}
+
+/* Hover effects per il diario */
+.diary-timeline-item:hover {
+  transform: translateX(4px);
+  transition: transform 0.2s ease;
+}
+
+.diary-image-preview:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
