@@ -120,6 +120,11 @@ class NotificationSystem {
                 classes: 'bg-gold text-ink-dark badge-unlocked',
                 icon: '🏆',
                 duration: 4000
+            },
+            story: {
+                classes: 'bg-gradient-to-r from-purple-600 to-blue-600 text-white story-notification',
+                icon: '📚',
+                duration: this.defaultDuration + 1000
             }
         };
 
@@ -198,6 +203,45 @@ class NotificationSystem {
     showError(message) {
         this.show(message, "error");
     }
+
+    // ===== STORY SYSTEM NOTIFICATIONS =====
+
+    // Notifica capitolo sbloccato
+    showStoryChapterUnlocked(chapter) {
+        this.show(`📚 Nuovo capitolo sbloccato: "${chapter.title}"!`, "story", 6000);
+    }
+
+    // Notifica capitolo completato
+    showStoryChapterCompleted(chapter) {
+        this.show(`✨ Capitolo "${chapter.title}" completato!`, "story", 5000);
+    }
+
+    // Notifica modalità storia attivata
+    showStoryModeActivated() {
+        this.show(`📖 Modalità Storia attivata!`, "story", 3000);
+    }
+
+    // Notifica modalità storia disattivata
+    showStoryModeDeactivated() {
+        this.show(`🗺️ Ritorno alla modalità normale`, "info", 2000);
+    }
+
+    // Notifica storia completata al 100%
+    showStoryCompleted() {
+        this.show(`🎉 Congratulazioni! Hai completato tutta la storia del Grimorio!`, "story", 8000);
+    }
+
+    // Notifica bookmark salvato
+    showStoryBookmarkSaved(chapterTitle) {
+        this.show(`🔖 Bookmark salvato in "${chapterTitle}"`, "story", 3000);
+    }
+
+    // Notifica progresso storia resettato
+    showStoryProgressReset() {
+        this.show(`🔄 Progresso storia resettato`, "warning", 3000);
+    }
+
+    // ===== END STORY SYSTEM NOTIFICATIONS =====
 
     showWarning(message) {
         this.show(message, "warning");

@@ -1,0 +1,830 @@
+/* STORY STYLES - Fisica 3.0 */
+/* Stili per l'interfaccia storia del Grimorio dell'Apprendista Stregone */
+
+/* === STORY MODE VIEW === */
+.story-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+    min-height: 80vh;
+}
+
+.story-header {
+    background: linear-gradient(135deg, #2d3748, #4a5568);
+    border: 2px solid #ffd700;
+    border-radius: 1rem;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.story-progress-info {
+    background: linear-gradient(135deg, #4a5568, #2d3748);
+    border: 1px solid #ffd700;
+    border-radius: 0.75rem;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.chapters-grid {
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.chapter-card {
+    background: linear-gradient(135deg, #2d3748, #4a5568);
+    border: 2px solid #ffd700;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.chapter-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(255, 215, 0, 0.1) 50%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.chapter-card:hover::before {
+    opacity: 1;
+}
+
+.chapter-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: #ffed4a;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+.chapter-card.locked {
+    opacity: 0.6;
+    cursor: not-allowed;
+    filter: grayscale(50%);
+}
+
+.chapter-card.locked:hover {
+    transform: none;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.progress-bar {
+    background: rgba(55, 65, 81, 0.8);
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.progress-fill {
+    background: linear-gradient(90deg, #ffd700, #ffed4a);
+    height: 100%;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+}
+
+.locked-overlay {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.story-controls {
+    padding: 2rem;
+    background: linear-gradient(135deg, #4a5568, #2d3748);
+    border: 1px solid #ffd700;
+    border-radius: 1rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.story-controls button {
+    min-width: 200px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1.125rem;
+    font-weight: bold;
+    border-radius: 0.75rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-transform: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.story-controls button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* === MODALE STORIA === */
+.story-modal-content {
+    max-width: 900px;
+    margin: 2rem auto;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 30%, #3b1e54 70%, #1a1a2e 100%);
+    border-radius: 20px;
+    padding: 0;
+    color: #fff;
+    box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 215, 0, 0.3);
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.story-header {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 193, 7, 0.3) 100%);
+    border-bottom: 2px solid rgba(255, 215, 0, 0.5);
+    position: relative;
+}
+
+.story-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(255, 215, 0, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(138, 43, 226, 0.3) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.story-narrative {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    max-height: 65vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.story-narrative::-webkit-scrollbar {
+    width: 8px;
+}
+
+.story-narrative::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.story-narrative::-webkit-scrollbar-thumb {
+    background: rgba(255, 215, 0, 0.5);
+    border-radius: 4px;
+}
+
+.story-narrative::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 215, 0, 0.7);
+}
+
+.story-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    text-align: justify;
+    font-family: 'Lora', serif;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    hyphens: auto;
+}
+
+.story-chapter-intro {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 193, 7, 0.2) 100%);
+    border-left: 4px solid #ffd700;
+    border-radius: 0 10px 10px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.story-chapter-intro::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 100% 0%, rgba(255, 215, 0, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.story-challenge {
+    position: relative;
+    overflow: hidden;
+}
+
+.story-challenge::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 0% 100%, rgba(138, 43, 226, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.story-actions {
+    background: linear-gradient(135deg, rgba(30, 60, 114, 0.7) 0%, rgba(26, 26, 46, 0.8) 100%);
+    border-top: 1px solid rgba(100, 149, 237, 0.3);
+    position: relative;
+}
+
+.story-actions::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 50% 0%, rgba(100, 149, 237, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+/* === PULSANTI STORIA === */
+.story-actions .btn-primary {
+    background: linear-gradient(135deg, #ff8c00 0%, #ff7f50 100%);
+    border: 2px solid #ffd700;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    box-shadow: 
+        0 4px 15px rgba(255, 140, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.story-actions .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.story-actions .btn-primary:hover::before {
+    left: 100%;
+}
+
+.story-actions .btn-primary:hover {
+    background: linear-gradient(135deg, #ff7f50 0%, #ff6347 100%);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 6px 20px rgba(255, 140, 0, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.story-actions .btn-secondary {
+    background: linear-gradient(135deg, #8a2be2 0%, #9370db 100%);
+    border: 2px solid #ba55d3;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    box-shadow: 
+        0 4px 15px rgba(138, 43, 226, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.story-actions .btn-secondary:hover {
+    background: linear-gradient(135deg, #9370db 0%, #8b61d3 100%);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 6px 20px rgba(138, 43, 226, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* === ANIMAZIONI STORIA === */
+@keyframes story-appear {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes story-text-reveal {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes magical-glow {
+    0%, 100% {
+        box-shadow: 
+            0 25px 50px rgba(0, 0, 0, 0.5),
+            0 0 0 1px rgba(255, 255, 255, 0.1),
+            0 0 20px rgba(255, 215, 0, 0.3);
+    }
+    50% {
+        box-shadow: 
+            0 25px 50px rgba(0, 0, 0, 0.5),
+            0 0 0 1px rgba(255, 255, 255, 0.1),
+            0 0 30px rgba(255, 215, 0, 0.5);
+    }
+}
+
+.story-modal-content {
+    animation: story-appear 0.5s ease-out, magical-glow 3s ease-in-out infinite;
+}
+
+.story-text {
+    animation: story-text-reveal 0.8s ease-out 0.3s both;
+}
+
+.story-chapter-intro {
+    animation: story-text-reveal 0.8s ease-out 0.1s both;
+}
+
+.story-challenge {
+    animation: story-text-reveal 0.8s ease-out 0.5s both;
+}
+
+/* === RESPONSIVE DESIGN === */
+@media (max-width: 768px) {
+    .story-modal-content {
+        margin: 1rem;
+        max-width: calc(100% - 2rem);
+        border-radius: 15px;
+    }
+    
+    .story-narrative {
+        max-height: 50vh;
+    }
+    
+    .story-text {
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+    
+    .story-actions {
+        padding: 1rem;
+    }
+    
+    .story-actions .btn-primary,
+    .story-actions .btn-secondary {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .story-header h2 {
+        font-size: 1.8rem;
+    }
+    
+    .story-header p {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .story-modal-content {
+        margin: 0.5rem;
+        max-width: calc(100% - 1rem);
+        border-radius: 10px;
+    }
+    
+    .story-narrative {
+        max-height: 40vh;
+        padding: 1rem;
+    }
+    
+    .story-text {
+        font-size: 0.95rem;
+    }
+    
+    .story-header {
+        padding: 1rem;
+    }
+    
+    .story-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .story-header span {
+        font-size: 2.5rem;
+    }
+}
+
+/* === MODALITÀ STORIA ATTIVA === */
+.story-mode .nav-btn.story-btn {
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: #1a1a1a;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    border: 2px solid #ffd700;
+}
+
+.story-mode .challenge-card {
+    border-left: 4px solid #ffd700;
+    position: relative;
+}
+
+.story-mode .challenge-card::before {
+    content: "📖";
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.2rem;
+    opacity: 0.8;
+}
+
+/* === EFFETTI PARTICELLARI === */
+@keyframes floating-particles {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(-20px) rotate(180deg);
+        opacity: 0.5;
+    }
+}
+
+.story-modal-content::after {
+    content: '✨ ⭐ 🌟';
+    position: absolute;
+    top: 10%;
+    right: 5%;
+    font-size: 1.5rem;
+    opacity: 0.3;
+    animation: floating-particles 6s ease-in-out infinite;
+    pointer-events: none;
+}
+
+/* === ACCESSIBILITÀ === */
+@media (prefers-reduced-motion: reduce) {
+    .story-modal-content {
+        animation: none;
+    }
+    
+    .story-text,
+    .story-chapter-intro,
+    .story-challenge {
+        animation: none;
+    }
+    
+    .story-actions .btn-primary::before {
+        display: none;
+    }
+    
+    .story-modal-content::after {
+        animation: none;
+    }
+}
+
+/* === DARK MODE SUPPORT === */
+@media (prefers-color-scheme: dark) {
+    .story-modal-content {
+        background: linear-gradient(135deg, #0f1419 0%, #1a1a2e 30%, #16213e 70%, #0f0f0f 100%);
+    }
+    
+    .story-narrative {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+}
+
+/* === TEMA PERGAMENA OVERRIDE === */
+.theme-pergamena .story-modal-content {
+    border: 3px solid var(--ink);
+    box-shadow: 
+        0 25px 50px rgba(93, 78, 55, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.theme-pergamena .story-header {
+    background: linear-gradient(135deg, var(--gold-light) 0%, var(--pergamena-dark) 100%);
+    border-bottom: 2px solid var(--gold);
+    color: var(--ink-dark);
+}
+
+.theme-pergamena .story-text {
+    color: var(--ink);
+    text-shadow: none;
+}
+
+/* === STORY MAP STYLES === */
+.story-map {
+    padding: 2rem;
+    background: linear-gradient(135deg, var(--pergamena-light), var(--pergamena-dark));
+    border-radius: 15px;
+    border: 2px solid var(--ink-light);
+    margin: 1rem;
+}
+
+.story-chapters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.story-chapter {
+    background: var(--pergamena);
+    border: 2px solid var(--ink-light);
+    border-radius: 10px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.story-chapter.unlocked {
+    cursor: pointer;
+    border-color: var(--gold);
+}
+
+.story-chapter.unlocked:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(93, 78, 55, 0.3);
+    border-color: var(--gold-dark);
+}
+
+.story-chapter.completed {
+    background: linear-gradient(135deg, var(--gold-light), var(--pergamena));
+    border-color: var(--gold-dark);
+}
+
+.story-chapter.locked {
+    opacity: 0.5;
+    filter: grayscale(50%);
+}
+
+.story-chapter::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.story-chapter.unlocked::before {
+    opacity: 1;
+}
+
+.chapter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.chapter-header h3 {
+    color: var(--ink-dark);
+    font-family: 'MedievalSharp', serif;
+    font-size: 1.3rem;
+    margin: 0;
+}
+
+.chapter-status {
+    font-size: 1.5rem;
+}
+
+.chapter-rooms {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.story-room {
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid var(--ink-light);
+    border-radius: 5px;
+    padding: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.story-room:hover {
+    background: rgba(255, 215, 0, 0.2);
+    border-color: var(--gold);
+}
+
+.story-room.completed {
+    background: rgba(255, 215, 0, 0.3);
+    border-color: var(--gold-dark);
+}
+
+.room-icon {
+    font-size: 1.2rem;
+}
+
+.room-title {
+    flex: 1;
+    color: var(--ink);
+    font-weight: 500;
+}
+
+.story-progress {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.progress-bar {
+    background: rgba(93, 78, 55, 0.2);
+    border-radius: 10px;
+    height: 20px;
+    overflow: hidden;
+    margin: 1rem auto;
+    max-width: 400px;
+    border: 1px solid var(--ink-light);
+}
+
+.progress-fill {
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    height: 100%;
+    transition: width 0.8s ease;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+/* === NOTIFICHE STORIA === */
+.story-notification {
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    border: 2px solid #ffd700;
+    color: #fff;
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.story-notification::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.story-notification:hover::before {
+    opacity: 1;
+}
+
+.story-notification.chapter-unlocked {
+    background: linear-gradient(135deg, #ff8c00, #ff7f50);
+}
+
+.story-notification.story-completed {
+    background: linear-gradient(135deg, #32cd32, #228b22);
+}
+
+/* === RESPONSIVE DESIGN === */
+@media (max-width: 768px) {
+    .story-container {
+        padding: 0.5rem;
+    }
+
+    .story-header {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .story-header h1 {
+        font-size: 2rem;
+    }
+
+    .chapters-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .chapter-card {
+        padding: 1rem;
+    }
+
+    .story-controls {
+        padding: 1rem;
+    }
+
+    .story-controls button {
+        min-width: 150px;
+        font-size: 1rem;
+        padding: 0.5rem 1rem;
+    }
+
+    .story-modal-content {
+        padding: 1rem;
+        margin: 1rem;
+        max-width: 95%;
+    }
+
+    .story-text {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .story-progress-info {
+        padding: 1rem;
+    }
+
+    .story-progress-info .grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .chapters-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .story-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .story-controls button {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* === ACCESSIBILITY === */
+.chapter-card:focus,
+.story-controls button:focus {
+    outline: 2px solid #ffd700;
+    outline-offset: 2px;
+}
+
+@media (prefers-contrast: high) {
+    .chapter-card {
+        border-width: 3px;
+    }
+    
+    .progress-fill {
+        background: #ffd700;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .chapter-card,
+    .progress-fill,
+    .story-controls button,
+    .story-notification {
+        transition: none;
+    }
+    
+    .chapter-card:hover {
+        transform: none;
+    }
+    
+    .story-controls button:hover {
+        transform: none;
+    }
+}

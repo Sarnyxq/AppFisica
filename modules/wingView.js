@@ -265,7 +265,13 @@ class WingView {
 
         // Apri il modale appropriato
         if (window.modals) {
-            modals.openChallengeModal(challengeId, type);
+            // Se è una sfida principale, mostra prima la storia (pattern ApprendimentoMatematica1)
+            if (type === 'main') {
+                modals.showChallengeStory(challengeId);
+            } else {
+                // Per side quest o altri tipi, apri direttamente
+                modals.openChallengeModal(challengeId, type);
+            }
         }
     }
 

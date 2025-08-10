@@ -199,6 +199,253 @@ class StorageManager {
         return false;
     }
 
+    // ===== STORY SYSTEM STORAGE METHODS =====
+
+    // Salva il progresso della storia
+    saveStoryProgress(storyProgress) {
+        try {
+            const currentProgress = this.loadProgress() || {};
+            currentProgress.storyProgress = {
+                ...storyProgress,
+                lastUpdated: new Date().toISOString()
+            };
+            return this.saveProgress(currentProgress);
+        } catch (error) {
+            console.error('Errore nel salvataggio progresso storia:', error);
+            return false;
+        }
+    }
+
+    // Carica il progresso della storia
+    loadStoryProgress() {
+        try {
+            const progress = this.loadProgress();
+            if (progress && progress.storyProgress) {
+                return progress.storyProgress;
+            }
+            // Ritorna progresso predefinito se non esiste
+            return {
+                currentChapter: 1,
+                unlockedChapters: [1],
+                completedChapters: [],
+                storyMode: false,
+                lastReadChapter: null,
+                storyStartDate: null,
+                totalStoryTime: 0
+            };
+        } catch (error) {
+            console.error('Errore nel caricamento progresso storia:', error);
+            return {
+                currentChapter: 1,
+                unlockedChapters: [1],
+                completedChapters: [],
+                storyMode: false,
+                lastReadChapter: null,
+                storyStartDate: null,
+                totalStoryTime: 0
+            };
+        }
+    }
+
+    // Salva i bookmark della storia
+    saveStoryBookmarks(bookmarks) {
+        try {
+            const storyData = this.getData('storia_bookmarks') || [];
+            const updatedBookmarks = Array.isArray(bookmarks) ? bookmarks : [bookmarks];
+            
+            // Aggiungi o aggiorna i bookmark
+            updatedBookmarks.forEach(newBookmark => {
+                const existingIndex = storyData.findIndex(b => 
+                    b.chapterId === newBookmark.chapterId && 
+                    b.challengeId === newBookmark.challengeId
+                );
+                
+                if (existingIndex >= 0) {
+                    storyData[existingIndex] = { ...newBookmark, lastUpdated: new Date().toISOString() };
+                } else {
+                    storyData.push({ ...newBookmark, created: new Date().toISOString() });
+                }
+            });
+
+            return this.saveData('storia_bookmarks', storyData);
+        } catch (error) {
+            console.error('Errore nel salvataggio bookmark storia:', error);
+            return false;
+        }
+    }
+
+    // Carica i bookmark della storia
+    loadStoryBookmarks() {
+        try {
+            return this.getData('storia_bookmarks') || [];
+        } catch (error) {
+            console.error('Errore nel caricamento bookmark storia:', error);
+            return [];
+        }
+    }
+
+    // Rimuovi un bookmark specifico
+    removeStoryBookmark(chapterId, challengeId) {
+        try {
+            const bookmarks = this.loadStoryBookmarks();
+            const filteredBookmarks = bookmarks.filter(b => 
+                !(b.chapterId === chapterId && b.challengeId === challengeId)
+            );
+            return this.saveData('storia_bookmarks', filteredBookmarks);
+        } catch (error) {
+            console.error('Errore nella rimozione bookmark storia:', error);
+            return false;
+        }
+    }
+
+    // Salva le preferenze della modalità storia
+    saveStoryPreferences(preferences) {
+        try {
+            const currentSettings = this.loadSettings() || {};
+            currentSettings.storyPreferences = {
+                ...preferences,
+                lastUpdated: new Date().toISOString()
+            };
+            return this.saveSettings(currentSettings);
+        } catch (error) {
+            console.error('Errore nel salvataggio preferenze storia:', error);
+            return false;
+        }
+    }
+
+    // Carica le preferenze della modalità storia
+    loadStoryPreferences() {
+        try {
+            const settings = this.loadSettings();
+            if (settings && settings.storyPreferences) {
+                return settings.storyPreferences;
+            }
+            // Ritorna preferenze predefinite
+            return {
+                autoAdvance: true,
+                narrationSpeed: 'medium',
+                showHints: true,
+                continuousReading: false,
+                fontSize: 'medium',
+                theme: 'pergamena'
+            };
+        } catch (error) {
+            console.error('Errore nel caricamento preferenze storia:', error);
+            return {
+                autoAdvance: true,
+                narrationSpeed: 'medium',
+                showHints: true,
+                continuousReading: false,
+                fontSize: 'medium',
+                theme: 'pergamena'
+            };
+        }
+    }
+
+    // Salva tempo di lettura per statistiche
+    updateStoryReadingTime(chapterId, timeSpent) {
+        try {
+            const storyTimes = this.getData('storia_reading_times') || {};
+            if (!storyTimes[chapterId]) {
+                storyTimes[chapterId] = 0;
+            }
+            storyTimes[chapterId] += timeSpent;
+            storyTimes.totalTime = Object.values(storyTimes).reduce((sum, time) => {
+                return typeof time === 'number' ? sum + time : sum;
+            }, 0);
+            storyTimes.lastUpdated = new Date().toISOString();
+            
+            return this.saveData('storia_reading_times', storyTimes);
+        } catch (error) {
+            console.error('Errore nell\'aggiornamento tempo lettura storia:', error);
+            return false;
+        }
+    }
+
+    // Ottieni statistiche di lettura della storia
+    getStoryReadingStats() {
+        try {
+            return this.getData('storia_reading_times') || { totalTime: 0 };
+        } catch (error) {
+            console.error('Errore nel caricamento statistiche lettura storia:', error);
+            return { totalTime: 0 };
+        }
+    }
+
+    // Reset del progresso storia (mantiene preferenze)
+    resetStoryProgress() {
+        try {
+            const currentProgress = this.loadProgress() || {};
+            currentProgress.storyProgress = {
+                currentChapter: 1,
+                unlockedChapters: [1],
+                completedChapters: [],
+                storyMode: false,
+                lastReadChapter: null,
+                storyStartDate: null,
+                totalStoryTime: 0
+            };
+            
+            // Rimuovi anche i bookmark e i tempi di lettura
+            this.removeData('storia_bookmarks');
+            this.removeData('storia_reading_times');
+            
+            return this.saveProgress(currentProgress);
+        } catch (error) {
+            console.error('Errore nel reset progresso storia:', error);
+            return false;
+        }
+    }
+
+    // Esporta tutti i dati della storia per backup
+    exportStoryData() {
+        try {
+            return {
+                storyProgress: this.loadStoryProgress(),
+                storyBookmarks: this.loadStoryBookmarks(),
+                storyPreferences: this.loadStoryPreferences(),
+                storyReadingStats: this.getStoryReadingStats(),
+                exportDate: new Date().toISOString(),
+                version: '3.0'
+            };
+        } catch (error) {
+            console.error('Errore nell\'export dati storia:', error);
+            return null;
+        }
+    }
+
+    // Importa i dati della storia da backup
+    importStoryData(storyBackup) {
+        try {
+            if (!storyBackup) return false;
+
+            let success = true;
+
+            if (storyBackup.storyProgress) {
+                success &= this.saveStoryProgress(storyBackup.storyProgress);
+            }
+
+            if (storyBackup.storyBookmarks) {
+                success &= this.saveData('storia_bookmarks', storyBackup.storyBookmarks);
+            }
+
+            if (storyBackup.storyPreferences) {
+                success &= this.saveStoryPreferences(storyBackup.storyPreferences);
+            }
+
+            if (storyBackup.storyReadingStats) {
+                success &= this.saveData('storia_reading_times', storyBackup.storyReadingStats);
+            }
+
+            return success;
+        } catch (error) {
+            console.error('Errore nell\'import dati storia:', error);
+            return false;
+        }
+    }
+
+    // ===== END STORY SYSTEM STORAGE METHODS =====
+
     // Ottieni informazioni di debug
     getDebugInfo() {
         return {

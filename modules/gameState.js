@@ -17,6 +17,16 @@ const gameDefaultPlayerState = {
     totalPlayTime: 0,
     badges: [],
     challengeData: {},
+    // ===== STORY SYSTEM =====
+    storyProgress: {
+        currentChapter: 1,
+        unlockedChapters: [1],
+        completedChapters: [],
+        storyMode: false,
+        lastReadChapter: null,
+        storyStartDate: null,
+        totalStoryTime: 0
+    },
     stats: {
         totalChallengesCompleted: 0,
         totalSideQuestsCompleted: 0,
@@ -139,6 +149,9 @@ class GameState {
 
         // Aggiungi esperienza
         this.addExperience(challenge.exp);
+
+        // Aggiorna il progresso della storia
+        this.updateStoryProgress(challengeId);
 
         // Aggiorna statistiche
         storageManager.updateStats({
@@ -397,6 +410,264 @@ class GameState {
     isSideQuestCompleted(challengeId) {
         return this.playerState.completedSideQuests.includes(challengeId);
     }
+
+    // ===== STORY SYSTEM METHODS =====
+    
+    // Inizializza il sistema storia
+    initStorySystem() {
+        if (!this.playerState.storyProgress) {
+            this.playerState.storyProgress = {
+                currentChapter: 1,
+                unlockedChapters: [1],
+                completedChapters: [],
+                storyMode: false,
+                lastReadChapter: null,
+                storyStartDate: null,
+                totalStoryTime: 0
+            };
+            this.saveProgress();
+        }
+    }
+
+    // Aggiorna il progresso della storia quando una sfida viene completata
+    updateStoryProgress(challengeId) {
+        if (!window.storyData) return false;
+
+        this.initStorySystem();
+
+        // Trova il capitolo che contiene questa sfida
+        const chapter = storyData.getChapterByChallengeId(challengeId);
+        if (!chapter) return false;
+
+        // Controlla se il capitolo è ora completato
+        if (this.isStoryChapterCompleted(chapter.id)) {
+            // Aggiungi ai capitoli completati se non già presente
+            if (!this.playerState.storyProgress.completedChapters.includes(chapter.id)) {
+                this.playerState.storyProgress.completedChapters.push(chapter.id);
+                
+                // Sblocca il prossimo capitolo
+                this.unlockNextStoryChapter(chapter.id);
+                
+                // Notifica completamento capitolo
+                this.emit('storyChapterCompleted', { chapterId: chapter.id, chapter });
+                
+                // Mostra notifica
+                if (window.notificationSystem) {
+                    notificationSystem.show(`📚 Capitolo "${chapter.title}" completato!`, 'success');
+                }
+            }
+        }
+
+        this.saveProgress();
+        return true;
+    }
+
+    // Verifica se un capitolo è completato
+    isStoryChapterCompleted(chapterId) {
+        if (!window.storyData) return false;
+
+        const chapter = storyData.getChapterById(chapterId);
+        if (!chapter) return false;
+
+        // Controlla se tutte le stanze del capitolo sono completate
+        return chapter.rooms.every(room => {
+            return this.playerState.completedChallenges.includes(room.challengeId);
+        });
+    }
+
+    // Sblocca il prossimo capitolo
+    unlockNextStoryChapter(currentChapterId) {
+        if (!window.storyData) return false;
+
+        const nextChapterId = currentChapterId + 1;
+        const chapters = storyData.getChapters();
+        const nextChapter = chapters.find(ch => ch.id === nextChapterId);
+
+        if (nextChapter && !this.playerState.storyProgress.unlockedChapters.includes(nextChapterId)) {
+            this.playerState.storyProgress.unlockedChapters.push(nextChapterId);
+            this.playerState.storyProgress.currentChapter = nextChapterId;
+            
+            this.emit('storyChapterUnlocked', { chapterId: nextChapterId, chapter: nextChapter });
+            
+            // Mostra notifica
+            if (window.notificationSystem) {
+                notificationSystem.show(`🆕 Nuovo capitolo sbloccato: "${nextChapter.title}"!`, 'success');
+            }
+            
+            return true;
+        }
+        
+        return false;
+    }
+
+    // Verifica se un capitolo è sbloccato
+    isStoryChapterUnlocked(chapterId) {
+        this.initStorySystem();
+        return this.playerState.storyProgress.unlockedChapters.includes(chapterId);
+    }
+
+    // Ottieni il capitolo corrente della storia
+    getCurrentStoryChapter() {
+        if (!window.storyData) return null;
+
+        this.initStorySystem();
+        
+        // Trova il primo capitolo non completato
+        const chapters = storyData.getChapters();
+        for (const chapter of chapters) {
+            if (this.isStoryChapterUnlocked(chapter.id) && !this.isStoryChapterCompleted(chapter.id)) {
+                return chapter;
+            }
+        }
+
+        // Se tutti i capitoli sono completati, ritorna l'ultimo
+        return chapters[chapters.length - 1];
+    }
+
+    // Ottieni la prossima sfida nella storia
+    getNextStoryChallenge() {
+        const currentChapter = this.getCurrentStoryChapter();
+        if (!currentChapter) return null;
+
+        // Trova la prima stanza non completata nel capitolo corrente
+        const nextRoom = currentChapter.rooms.find(room => {
+            return !this.playerState.completedChallenges.includes(room.challengeId);
+        });
+
+        if (nextRoom) {
+            return window.castleData ? castleData.getChallengeById(nextRoom.challengeId) : null;
+        }
+
+        return null;
+    }
+
+    // Attiva/disattiva modalità storia
+    toggleStoryMode() {
+        this.initStorySystem();
+        this.playerState.storyProgress.storyMode = !this.playerState.storyProgress.storyMode;
+        
+        if (this.playerState.storyProgress.storyMode && !this.playerState.storyProgress.storyStartDate) {
+            this.playerState.storyProgress.storyStartDate = new Date().toISOString();
+        }
+        
+        this.saveProgress();
+        this.emit('storyModeToggled', { storyMode: this.playerState.storyProgress.storyMode });
+        
+        return this.playerState.storyProgress.storyMode;
+    }
+
+    // Imposta l'ultimo capitolo letto
+    setLastReadChapter(chapterId) {
+        this.initStorySystem();
+        this.playerState.storyProgress.lastReadChapter = chapterId;
+        this.saveProgress();
+    }
+
+    // Ottieni statistiche della storia
+    getStoryStats() {
+        if (!window.storyData) return null;
+
+        this.initStorySystem();
+        
+        const totalChapters = storyData.getChapters().length;
+        const totalRooms = storyData.getTotalRoomsCount();
+        const completedChapters = this.playerState.storyProgress.completedChapters.length;
+        const completedRooms = this.getCompletedStoryRoomsCount();
+        
+        return {
+            totalChapters,
+            totalRooms,
+            completedChapters,
+            completedRooms,
+            chapterProgress: Math.round((completedChapters / totalChapters) * 100),
+            roomProgress: Math.round((completedRooms / totalRooms) * 100),
+            currentChapter: this.playerState.storyProgress.currentChapter,
+            unlockedChapters: this.playerState.storyProgress.unlockedChapters.length,
+            storyMode: this.playerState.storyProgress.storyMode
+        };
+    }
+
+    // Ottieni il numero di stanze completate nella storia
+    getCompletedStoryRoomsCount() {
+        if (!window.storyData) return 0;
+
+        const chapters = storyData.getChapters();
+        let completedCount = 0;
+
+        chapters.forEach(chapter => {
+            chapter.rooms.forEach(room => {
+                if (this.playerState.completedChallenges.includes(room.challengeId)) {
+                    completedCount++;
+                }
+            });
+        });
+
+        return completedCount;
+    }
+
+    // Reset del progresso della storia
+    resetStoryProgress() {
+        if (confirm('🔄 Sei sicuro di voler resettare il progresso della storia? Questo non influenzerà le sfide completate.')) {
+            this.playerState.storyProgress = {
+                currentChapter: 1,
+                unlockedChapters: [1],
+                completedChapters: [],
+                storyMode: false,
+                lastReadChapter: null,
+                storyStartDate: null,
+                totalStoryTime: 0
+            };
+            
+            this.saveProgress();
+            this.emit('storyProgressReset');
+            
+            if (window.notificationSystem) {
+                notificationSystem.show('📚 Progresso storia resettato!', 'info');
+            }
+            
+            return true;
+        }
+        
+        return false;
+    }
+
+    // Reset completo di tutte le sfide (influenza anche la storia)
+    resetAllChallenges() {
+        if (confirm('⚠️ Questo resetterà TUTTE le sfide completate e il progresso della storia. Continuare?')) {
+            this.playerState.completedChallenges = [];
+            this.playerState.completedSideQuests = [];
+            this.playerState.challengeData = {};
+            this.playerState.storyProgress = {
+                currentChapter: 1,
+                unlockedChapters: [1],
+                completedChapters: [],
+                storyMode: false,
+                lastReadChapter: null,
+                storyStartDate: null,
+                totalStoryTime: 0
+            };
+            
+            // Reset anche exp e livello se desiderato
+            if (confirm('🔄 Vuoi resettare anche il livello e l\'esperienza?')) {
+                this.playerState.exp = 0;
+                this.playerState.level = 1;
+            }
+            
+            this.saveProgress();
+            this.updateUI();
+            this.emit('allChallengesReset');
+            
+            if (window.notificationSystem) {
+                notificationSystem.show('🔄 Tutte le sfide e la storia sono state resettate!', 'info');
+            }
+            
+            return true;
+        }
+        
+        return false;
+    }
+
+    // ===== END STORY SYSTEM METHODS =====
 
     // Event listener system
     on(event, callback) {
