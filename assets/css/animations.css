@@ -1,0 +1,425 @@
+/* ANIMAZIONI - Fisica 3.0 */
+/* Animazioni e transizioni per il Grimorio dell'Apprendista Stregone */
+
+/* === ANIMAZIONI DI BASE === */
+
+/* Glow magico per badge sbloccati */
+@keyframes magical-glow {
+  0% { 
+    text-shadow: 0 0 8px var(--gold-light);
+    transform: scale(1);
+  }
+  50% { 
+    text-shadow: 0 0 16px var(--gold), 0 0 24px var(--gold-light);
+    transform: scale(1.05);
+  }
+  100% { 
+    text-shadow: 0 0 8px var(--gold-light);
+    transform: scale(1);
+  }
+}
+
+/* Shimmer per elementi speciali */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateX(100%); opacity: 0; }
+}
+
+/* Pulsazione dolce */
+@keyframes gentle-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Rotazione magica */
+@keyframes magical-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Fluttuazione */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Slide in da destra (notifiche) */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Slide in da sinistra */
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Fade in */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Scale in */
+@keyframes scaleIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Bounce in */
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+  70% {
+    transform: scale(0.9);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Shake per errori */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+  20%, 40%, 60%, 80% { transform: translateX(4px); }
+}
+
+/* === CLASSI DI ANIMAZIONE === */
+
+/* Badge magici */
+.badge-unlocked {
+  animation: magical-glow 3s ease-in-out infinite;
+}
+
+/* Elementi con shimmer */
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+  animation: shimmer 2s infinite;
+}
+
+/* Pulsazione per elementi che richiedono attenzione */
+.pulse {
+  animation: gentle-pulse 2s ease-in-out infinite;
+}
+
+/* Rotazione per icone di caricamento */
+.spin {
+  animation: magical-spin 1s linear infinite;
+}
+
+/* Fluttuazione per elementi decorativi */
+.float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* === TRANSIZIONI === */
+
+/* Transizione standard per card */
+.card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+/* Transizioni per pulsanti */
+.btn-primary, .btn-secondary {
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  transition: all 0.1s ease-in-out;
+}
+
+/* Transizioni per modali */
+.modal {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal .modal-content {
+  animation: scaleIn 0.3s ease-out;
+}
+
+/* === ANIMAZIONI DI NOTIFICA === */
+
+/* Notifiche */
+.notification {
+  animation: slideInRight 0.3s ease-out;
+}
+
+.notification.removing {
+  animation: slideInRight 0.3s ease-in reverse;
+}
+
+/* Notifica di successo */
+.notification.success {
+  animation: bounceIn 0.5s ease-out;
+}
+
+/* Notifica di errore */
+.notification.error {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* === ANIMAZIONI SPECIFICHE === */
+
+/* Barra dell'esperienza */
+.exp-bar-fill {
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+/* Effetto shimmer per la barra esperienza */
+.exp-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255,255,255,0.4), 
+    transparent
+  );
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Animazione quando la barra cresce */
+.exp-bar-fill.growing {
+  animation: exp-grow 0.8s ease-out;
+}
+
+@keyframes exp-grow {
+  0% {
+    transform: scaleX(0.95);
+  }
+  50% {
+    transform: scaleX(1.02);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+/* Nuovi badge guadagnati */
+.new-badge {
+  animation: bounceIn 0.6s ease-out;
+}
+
+/* Livello completato */
+.level-up {
+  animation: magical-glow 1s ease-out, scaleIn 0.5s ease-out;
+}
+
+/* Canvas drawing effect */
+.canvas-container {
+  transition: box-shadow 0.3s ease;
+}
+
+.canvas-container:focus-within {
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.3);
+}
+
+/* Tool buttons */
+.tool-button {
+  transition: all 0.2s ease;
+}
+
+.tool-button:hover {
+  transform: scale(1.05);
+}
+
+.tool-button.active {
+  animation: gentle-pulse 2s ease-in-out infinite;
+}
+
+/* === ANIMAZIONI DI CARICAMENTO === */
+
+/* Spinner di caricamento */
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--pergamena-dark);
+  border-top: 4px solid var(--gold);
+  border-radius: 50%;
+  animation: magical-spin 1s linear infinite;
+}
+
+/* Punti di caricamento */
+.loading-dots {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.loading-dots span {
+  width: 8px;
+  height: 8px;
+  background: var(--gold);
+  border-radius: 50%;
+  animation: gentle-pulse 1.5s ease-in-out infinite;
+}
+
+.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+/* === ANIMAZIONI RESPONSIVE === */
+
+/* Riduce le animazioni su dispositivi con performance limitata */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* === ANIMAZIONI HOVER AVANZATE === */
+
+/* Hover effect per zone cards */
+.zone-card:hover {
+  animation: float 0.3s ease-out forwards;
+}
+
+/* Hover effect per challenge cards */
+.challenge-card:hover {
+  box-shadow: 
+    0 8px 16px var(--shadow-dark),
+    inset 0 1px 0 var(--pergamena-light);
+}
+
+/* === ANIMAZIONI DI FOCUS === */
+
+/* Focus accessibile per elementi interattivi */
+button:focus,
+input:focus,
+textarea:focus {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+  animation: gentle-pulse 1s ease-in-out 3;
+}
+
+/* === KEYFRAMES PERSONALIZZATI === */
+
+/* Effetto pergamena che si srotola */
+@keyframes unfurl {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  100% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+}
+
+.unfurl {
+  animation: unfurl 0.5s ease-out;
+}
+
+/* Effetto di scrittura magica */
+@keyframes write {
+  0% { width: 0; }
+  100% { width: 100%; }
+}
+
+.magical-write {
+  overflow: hidden;
+  white-space: nowrap;
+  animation: write 2s ease-in-out;
+}
+
+/* === PERFORMANCE OPTIMIZATION === */
+
+/* Promuove elementi animati a layer compositing */
+.badge-unlocked,
+.shimmer,
+.float,
+.modal {
+  will-change: transform, opacity;
+}
+
+/* Remove will-change after animation */
+@keyframes remove-will-change {
+  to { will-change: auto; }
+}
+
+/* === ANIMAZIONI DI STATO === */
+
+/* Elemento che appare */
+.appear {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Elemento che scompare */
+.disappear {
+  animation: fadeIn 0.3s ease-in reverse;
+}
+
+/* Elemento che si ingrandisce */
+.grow {
+  animation: scaleIn 0.3s ease-out;
+}
+
+/* Elemento che rimbalza */
+.bounce {
+  animation: bounceIn 0.5s ease-out;
+}

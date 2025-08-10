@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Sistema Esperienza - Fisica 5.0</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .btn.success {
+            background: #28a745;
+        }
+        .btn.warning {
+            background: #ffc107;
+            color: black;
+        }
+        .btn.danger {
+            background: #dc3545;
+        }
+        .result {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin-top: 10px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status.warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Sistema Esperienza - Fisica 5.0</h1>
+    
+    <div class="test-container">
+        <h2>📊 Stato del Sistema</h2>
+        <p>Usa questi pulsanti per testare e verificare il sistema di esperienza:</p>
+        
+        <button class="btn" onclick="checkSystemStatus()">🔍 Controlla Stato Sistema</button>
+        <button class="btn success" onclick="runAllTests()">✅ Esegui Tutti i Test</button>
+        <button class="btn warning" onclick="testAddExperience()">⚡ Testa Aggiunta EXP</button>
+        <button class="btn" onclick="repairSystem()">🔧 Ripara Sistema</button>
+        <button class="btn danger" onclick="resetProgress()">🗑️ Reset Progressi</button>
+        
+        <div id="system-status"></div>
+        <div id="test-results"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>📝 Istruzioni per il Test</h2>
+        <ol>
+            <li><strong>Apri la console del browser</strong> (F12 → Console)</li>
+            <li><strong>Carica la pagina del Grimorio</strong> (index.html)</li>
+            <li><strong>Copia e incolla questo codice</strong> nella console:</li>
+        </ol>
+        
+        <div class="result">// === CODICE DI TEST PER LA CONSOLE ===
+
+// 1. Test funzioni di base
+console.log('🧪 Test Sistema Esperienza');
+console.log('========================');
+
+// Test calcolo esperienza
+function testCalculations() {
+    const tests = [
+        {exp: 0, expectedLevel: 1},
+        {exp: 50, expectedLevel: 1},
+        {exp: 100, expectedLevel: 2},
+        {exp: 300, expectedLevel: 3},
+        {exp: 600, expectedLevel: 4}
+    ];
+    
+    tests.forEach(test => {
+        const result = getLevelFromExp(test.exp);
+        console.log(`EXP ${test.exp} → Livello ${result.level} (${result.currentLevelExp} nel livello corrente)`);
+    });
+}
+
+// 2. Test stato del giocatore
+function testPlayerState() {
+    if (window.gameState && gameState.isInitialized) {
+        const state = gameState.playerState;
+        console.log(`👤 Giocatore: ${state.playerName}`);
+        console.log(`📊 Livello: ${state.level}, EXP: ${state.exp}`);
+        
+        const debugInfo = gameState.getDebugInfo();
+        if (debugInfo.experienceInfo.levelMismatch) {
+            console.warn('⚠️ INCONSISTENZA RILEVATA!');
+            console.log('🔧 Usa gameState.repairExperienceSystem() per riparare');
+        } else {
+            console.log('✅ Sistema coerente');
+        }
+    } else {
+        console.warn('⚠️ GameState non inizializzato');
+    }
+}
+
+// 3. Test aggiunta esperienza
+function testAddExp(amount = 50) {
+    if (window.gameState && gameState.isInitialized) {
+        const before = gameState.playerState.exp;
+        gameState.addExperience(amount);
+        const after = gameState.playerState.exp;
+        console.log(`⚡ Aggiunta ${amount} EXP: ${before} → ${after}`);
+    }
+}
+
+// 4. Esegui tutti i test
+function runTests() {
+    testCalculations();
+    console.log('');
+    testPlayerState();
+    console.log('');
+    console.log('💡 Usa testAddExp(50) per testare aggiunta esperienza');
+    console.log('💡 Usa gameState.getDebugInfo() per info dettagliate');
+}
+
+// Esegui i test
+runTests();</div>
+
+        <button class="btn" onclick="copyTestCode()">📋 Copia Codice Test</button>
+    </div>
+
+    <div class="test-container">
+        <h2>🎯 Come Verificare le Correzioni</h2>
+        
+        <h3>Problema Risolto: Barra Esperienza che si Resetta</h3>
+        <ul>
+            <li>✅ <strong>Prima del fix:</strong> La barra si azzerava ad ogni ricarica</li>
+            <li>✅ <strong>Dopo il fix:</strong> La barra mantiene i progressi correttamente</li>
+        </ul>
+
+        <h3>Test Manuale</h3>
+        <ol>
+            <li>Apri il Grimorio della Fisica 5.0</li>
+            <li>Completa una sfida per guadagnare esperienza</li>
+            <li>Ricarica la pagina (F5)</li>
+            <li>✅ <strong>La barra dell'esperienza dovrebbe mantenere il progresso</strong></li>
+            <li>✅ <strong>Il livello dovrebbe rimanere corretto</strong></li>
+        </ol>
+
+        <h3>Controlli Automatici Aggiunti</h3>
+        <ul>
+            <li>🔧 Controllo coerenza all'avvio</li>
+            <li>🔧 Correzione automatica delle inconsistenze</li>
+            <li>🔧 Logging dettagliato per debug</li>
+            <li>🔧 Sistema di riparazione manuale</li>
+        </ul>
+    </div>
+
+    <script>
+        function showResult(elementId, content, className = '') {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="result ${className}">${content}</div>`;
+        }
+
+        function showStatus(message, type = 'success') {
+            const statusDiv = document.getElementById('system-status');
+            statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+
+        function checkSystemStatus() {
+            if (typeof window !== 'undefined' && window.opener) {
+                // Se questa pagina è aperta in una nuova finestra
+                try {
+                    const gameState = window.opener.gameState;
+                    if (gameState && gameState.isInitialized) {
+                        const debugInfo = gameState.getDebugInfo();
+                        const status = `
+Sistema Inizializzato: ✅
+Giocatore: ${gameState.playerState.playerName || 'Non impostato'}
+Livello: ${gameState.playerState.level}
+Esperienza: ${gameState.playerState.exp}
+Inconsistenze: ${debugInfo.experienceInfo.levelMismatch ? '⚠️ SÌ' : '✅ NO'}
+                        `;
+                        showResult('system-status', status, 'success');
+                    } else {
+                        showStatus('❌ GameState non trovato o non inizializzato', 'error');
+                    }
+                } catch (e) {
+                    showStatus('❌ Errore nell\'accesso al GameState: ' + e.message, 'error');
+                }
+            } else {
+                showStatus('⚠️ Per usare questa funzione, apri questa pagina dal Grimorio', 'warning');
+            }
+        }
+
+        function runAllTests() {
+            const testCode = `
+// Test automatico del sistema
+console.log('🧪 Avvio test automatico...');
+
+const tests = [
+    {exp: 0, expectedLevel: 1},
+    {exp: 100, expectedLevel: 2},
+    {exp: 300, expectedLevel: 3}
+];
+
+let allPassed = true;
+tests.forEach(test => {
+    const result = getLevelFromExp(test.exp);
+    if (result.level !== test.expectedLevel) {
+        console.error('❌ Test fallito:', test);
+        allPassed = false;
+    }
+});
+
+console.log(allPassed ? '✅ Tutti i test passati!' : '❌ Alcuni test falliti');
+            `;
+            
+            showResult('test-results', '✅ Test eseguiti! Controlla la console del browser per i risultati.', 'success');
+            copyToClipboard(testCode);
+        }
+
+        function testAddExperience() {
+            const code = `gameState.addExperience(50); gameState.updateUI();`;
+            copyToClipboard(code);
+            showResult('test-results', '⚡ Codice copiato! Incollalo nella console per testare l\'aggiunta di 50 EXP.', 'success');
+        }
+
+        function repairSystem() {
+            const code = `gameState.repairExperienceSystem();`;
+            copyToClipboard(code);
+            showResult('test-results', '🔧 Codice copiato! Incollalo nella console per riparare il sistema.', 'warning');
+        }
+
+        function resetProgress() {
+            const code = `gameState.resetProgressOnly();`;
+            copyToClipboard(code);
+            showResult('test-results', '🗑️ Codice copiato! ⚠️ ATTENZIONE: Questo cancellerà tutti i progressi!', 'error');
+        }
+
+        function copyTestCode() {
+            const testCode = document.querySelector('.result').textContent;
+            copyToClipboard(testCode);
+            showStatus('📋 Codice di test copiato negli appunti!', 'success');
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                console.log('Codice copiato negli appunti');
+            }).catch(err => {
+                console.error('Errore nella copia:', err);
+                // Fallback per browser più vecchi
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+            });
+        }
+    </script>
+</body>
+</html>

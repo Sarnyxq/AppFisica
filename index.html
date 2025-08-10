@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Il Grimorio dell'Apprendista Stregone</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <!-- CSS Stylesheets -->
+    <link rel="stylesheet" href="assets/css/theme.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/animations.css">
+</head>
+<body class="min-h-screen font-serif" style="background: linear-gradient(135deg, #f4efdf, #e8dcc6);">
+    <div id="eraser-cursor" class="hidden"></div>
+
+    <!-- Welcome Screen -->
+    <div id="welcome-screen" class="min-h-screen flex flex-col items-center justify-center p-4 text-center">
+        <div class="card p-8 md:p-12 rounded-lg max-w-3xl w-full">
+            <h1 class="font-dnd text-5xl md:text-7xl text-ink-dark mb-4">Il Grimorio dell'Apprendista Stregone</h1>
+            <p class="mb-6 text-lg text-ink-light">Benvenuto, giovane apprendista, nel regno arcano della Fisica. Questo antico grimorio racchiude i segreti delle forze che governano l'universo. Dalle umili misure alle leggi supreme del moto, ogni pagina ti condurrà verso la maestria dei fenomeni naturali.</p>
+            <p class="mb-8 text-lg text-ink-light">Scrivi il tuo nome nel registro degli apprendisti e inizia il tuo viaggio verso la saggezza fisica.</p>
+            <input type="text" id="player-name-input" placeholder="Nome dell'Apprendista" class="w-full max-w-sm p-2 border-2 border-ink rounded bg-pergamena text-center text-lg mb-6">
+            <button id="start-journey-btn" class="btn-primary font-dnd text-2xl px-8 py-3 rounded-lg">Inizia il Percorso Arcano</button>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="main-app" class="hidden">
+        <!-- Header with Navigation -->
+        <header id="header"></header>
+
+        <!-- Main Content Area -->
+        <main id="main-content" class="container mx-auto p-4 md:p-8">
+            <!-- Content will be dynamically loaded here -->
+        </main>
+
+        <!-- Challenge Modal -->
+        <div id="challenge-modal" class="hidden"></div>
+
+        <!-- Settings Modal -->
+        <div id="settings-modal" class="hidden"></div>
+
+        <!-- Diary Modal -->
+        <div id="diary-modal" class="hidden"></div>
+
+        <!-- Seal Modal -->
+        <div id="seal-modal" class="hidden"></div>
+
+        <!-- Notification Area -->
+        <div id="notification-area" class="fixed bottom-5 right-5 z-50"></div>
+    </div>
+
+    <!-- Script Modules -->
+    <script src="data/castleData.js"></script>
+    <script src="modules/storageManager.js"></script>
+    <script src="modules/gameState.js"></script>
+    <script src="modules/notificationSystem.js"></script>
+    <script src="components/modals.js"></script>
+    <script src="components/settingsModal.js"></script>
+    <script src="components/header.js"></script>
+    <script src="components/canvas.js"></script>
+    <script src="modules/castleMap.js"></script>
+    <script src="modules/wingView.js"></script>
+    <script src="modules/trophyHall.js"></script>
+    <script src="modules/memoryHall.js"></script>
+    <script src="assets/js/app.js"></script>
+
+    <!-- Welcome Screen Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const startBtn = document.getElementById('start-journey-btn');
+            const playerNameInput = document.getElementById('player-name-input');
+            const welcomeScreen = document.getElementById('welcome-screen');
+            const mainApp = document.getElementById('main-app');
+
+            function launchAppAndMap(){
+                // Avvia interfaccia principale quando l'app è pronta
+                const doRender = () => { 
+                    if (window.castleMap) {
+                        castleMap.render();
+                        // Forza aggiornamento UI per sincronizzare l'esperienza
+                        if (window.gameState && gameState.isInitialized) {
+                            gameState.updateUI();
+                        }
+                    }
+                };
+                if (window.fisicaApp && window.fisicaApp.isInitialized){ 
+                    doRender(); 
+                } else {
+                    document.addEventListener('fisicaAppReady', doRender, { once:true });
+                }
+            }
+
+            function hideWelcome(){ welcomeScreen && (welcomeScreen.style.display='none'); mainApp && mainApp.classList.remove('hidden'); }
+
+            // Auto-skip se progressi già salvati con playerName
+            let existingName = '';
+            try {
+                if (window.storageManager) {
+                    const prog = storageManager.loadProgress();
+                    if (prog && prog.playerName) existingName = prog.playerName;
+                }
+                if (!existingName) {
+                    // fallback legacy chiave semplice
+                    existingName = localStorage.getItem('grimorio_fisica_playerName') || '';
+                }
+            } catch(e) { console.warn('Errore lettura nome salvato', e); }
+            if (existingName) {
+                if (playerNameInput) playerNameInput.value = existingName;
+                // Se gameState già caricato sincronizza
+                if (window.gameState){ gameState.playerState.playerName = existingName; gameState.save(); }
+                hideWelcome();
+                launchAppAndMap();
+            }
+
+            if (startBtn) {
+                startBtn.addEventListener('click', function() {
+                    const playerName = (playerNameInput?.value||'').trim();
+                    if (!playerName) { alert('Inserisci il tuo nome per iniziare il viaggio arcano!'); playerNameInput && playerNameInput.focus(); return; }
+
+                    // Inizializza o aggiorna stato
+                    if (window.gameState){
+                        if (!gameState.playerState.playerName){
+                            gameState.startNewGame(playerName);
+                        } else {
+                            gameState.playerState.playerName = playerName; gameState.save();
+                        }
+                    } else {
+                        localStorage.setItem('grimorio_fisica_playerName', playerName);
+                    }
+
+                    hideWelcome();
+                    launchAppAndMap();
+                });
+            }
+
+            // Enter per confermare
+            if (playerNameInput) {
+                playerNameInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') startBtn?.click(); });
+                if (!existingName) setTimeout(()=>playerNameInput.focus(),100);
+            }
+        });
+    </script>
+</body>
+</html>

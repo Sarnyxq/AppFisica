@@ -1,0 +1,16 @@
+{
+  "name": "grimorio-fisica-3.0",
+  "version": "3.0.0",
+  "description": "Il Grimorio dell'Apprendista Stregone - Sistema di apprendimento della fisica gamificato",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "keywords": ["fisica", "education", "gamification", "learning"],
+  "author": "Grimorio Team",
+  "license": "MIT"
+}

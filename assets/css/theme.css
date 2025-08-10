@@ -1,0 +1,320 @@
+/* TEMA: Il Grimorio dell'Apprendista Stregone */
+/* Fisica 3.0: Combinazione Template v2.0 + Tema Fisica 2.0 */
+
+/* === VARIABILI CSS TEMA PERGAMENA === */
+:root {
+  /* Colori Pergamena e Inchiostro */
+  --pergamena-light: #f9f6e8;
+  --pergamena: #f4efdf;
+  --pergamena-dark: #e8dcc6;
+  --pergamena-darker: #d4c4a8;
+  
+  --ink-light: #5d4e37;
+  --ink: #4a3c28;
+  --ink-dark: #3d2f1f;
+  
+  /* Accenti Magici */
+  --gold: #d4af37;
+  --gold-light: #f4e4bc;
+  --gold-dark: #b8941f;
+  
+  --magic-blue: #4a6fa5;
+  --magic-purple: #6b4c93;
+  --magic-green: #5a7c65;
+  
+  /* Sfumature */
+  --shadow-light: rgba(93, 78, 55, 0.1);
+  --shadow-medium: rgba(93, 78, 55, 0.2);
+  --shadow-dark: rgba(93, 78, 55, 0.3);
+}
+
+/* === TIPOGRAFIA MEDIEVALE === */
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel:wght@400;600&family=Lora:ital,wght@0,400;0,700;1,400&display=swap');
+
+.font-dnd {
+  font-family: 'MedievalSharp', 'Cinzel', serif;
+}
+
+.font-serif {
+  font-family: 'Lora', 'Times New Roman', serif;
+}
+
+/* === SFONDI E TEXTURE === */
+body {
+  background: linear-gradient(135deg, var(--pergamena-light), var(--pergamena-dark));
+  background-attachment: fixed;
+  color: var(--ink);
+}
+
+.pergamena {
+  background: var(--pergamena);
+  background-image: 
+    radial-gradient(circle at 25% 25%, var(--pergamena-light) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, var(--pergamena-dark) 0%, transparent 50%);
+}
+
+.pergamena-dark {
+  background: var(--pergamena-dark);
+  background-image: 
+    radial-gradient(circle at 30% 40%, var(--pergamena) 0%, transparent 60%);
+}
+
+/* === COLORI SEMANTICI === */
+.text-ink-light { color: var(--ink-light); }
+.text-ink { color: var(--ink); }
+.text-ink-dark { color: var(--ink-dark); }
+
+.bg-pergamena { background-color: var(--pergamena); }
+.bg-pergamena-dark { background-color: var(--pergamena-dark); }
+.bg-pergamena-darker { background-color: var(--pergamena-darker); }
+
+.border-ink { border-color: var(--ink); }
+.border-ink-light { border-color: var(--ink-light); }
+.border-ink-dark { border-color: var(--ink-dark); }
+
+/* === TEMA HEADER === */
+.magic-header {
+  background: linear-gradient(135deg, var(--ink-dark), var(--ink));
+  border-bottom: 3px solid var(--gold);
+  box-shadow: 0 4px 8px var(--shadow-dark);
+}
+
+/* === CARD E COMPONENTI === */
+.card {
+  background: var(--pergamena);
+  background-image: 
+    radial-gradient(circle at 25% 25%, var(--pergamena-light) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, var(--pergamena-dark) 0%, transparent 50%);
+  border: 2px solid var(--ink-light);
+  box-shadow: 
+    0 4px 8px var(--shadow-medium),
+    inset 0 1px 0 var(--pergamena-light);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 8px 16px var(--shadow-dark),
+    inset 0 1px 0 var(--pergamena-light);
+}
+
+.card.locked {
+  background: var(--pergamena-darker);
+  border-color: #999;
+  opacity: 0.6;
+  filter: grayscale(50%);
+}
+
+/* === PULSANTI === */
+.btn-primary {
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  color: var(--ink-dark);
+  border: 2px solid var(--gold-dark);
+  font-weight: bold;
+  text-shadow: 0 1px 0 var(--gold-light);
+  box-shadow: 
+    0 2px 4px var(--shadow-medium),
+    inset 0 1px 0 var(--gold-light);
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--gold-light), var(--gold));
+  transform: translateY(-1px);
+  box-shadow: 
+    0 4px 8px var(--shadow-dark),
+    inset 0 1px 0 var(--gold-light);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 
+    0 2px 4px var(--shadow-medium),
+    inset 0 -1px 0 var(--gold-dark);
+}
+
+.btn-secondary {
+  background: var(--pergamena);
+  color: var(--ink);
+  border: 2px solid var(--ink-light);
+  font-weight: bold;
+}
+
+.btn-secondary:hover {
+  background: var(--pergamena-dark);
+  border-color: var(--ink);
+}
+
+/* === BADGE E TROFEI === */
+.badge-unlocked {
+  color: var(--gold);
+  text-shadow: 0 0 8px var(--gold-light);
+  animation: gentle-glow 2s ease-in-out infinite alternate;
+}
+
+.badge-locked {
+  color: #999;
+  filter: grayscale(100%);
+  opacity: 0.5;
+}
+
+/* === BARRA ESPERIENZA === */
+.exp-bar-container {
+  background: var(--pergamena-darker);
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  overflow: hidden;
+  height: 24px; /* Altezza fissa per la barra */
+  position: relative;
+}
+
+.exp-bar-fill {
+  background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-light));
+  height: 100%;
+  width: 0%; /* Inizia da 0% */
+  border-radius: 8px;
+  transition: width 0.8s ease-out;
+  box-shadow: inset 0 2px 4px rgba(255,255,255,0.3);
+  position: relative;
+  min-width: 0;
+}
+
+/* === MODALI === */
+.modal-backdrop {
+  background: rgba(61, 47, 31, 0.7);
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  background: var(--pergamena);
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+  box-shadow: 
+    0 20px 40px var(--shadow-dark),
+    inset 0 1px 0 var(--pergamena-light);
+}
+
+/* === CANVAS E DISEGNO === */
+.canvas-container {
+  background: var(--pergamena-light);
+  border: 3px solid var(--ink);
+  border-radius: 8px;
+  box-shadow: inset 0 2px 4px var(--shadow-light);
+}
+
+.tool-button {
+  background: var(--pergamena);
+  border: 2px solid var(--ink-light);
+  color: var(--ink);
+  transition: all 0.2s ease;
+}
+
+.tool-button:hover {
+  background: var(--pergamena-dark);
+  border-color: var(--ink);
+}
+
+.tool-button.active {
+  background: var(--gold);
+  border-color: var(--gold-dark);
+  color: var(--ink-dark);
+}
+
+/* === ZONE DEL GRIMORIO === */
+.zone-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.zone-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, var(--pergamena-light) 50%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.zone-card:hover::before {
+  opacity: 0.3;
+}
+
+/* === ANIMAZIONI === */
+@keyframes gentle-glow {
+  0% { text-shadow: 0 0 8px var(--gold-light); }
+  100% { text-shadow: 0 0 16px var(--gold), 0 0 24px var(--gold-light); }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+  transform: translateX(-100%);
+  animation: shimmer 2s infinite;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .font-dnd {
+    font-size: 0.9em;
+  }
+  
+  .card {
+    padding: 1rem;
+  }
+  
+  .btn-primary {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+  }
+}
+
+/* === ACCESSIBILITÀ === */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* === UTILITY CLASSES === */
+.text-center { text-align: center; }
+.hidden { display: none; }
+.block { display: block; }
+.flex { display: flex; }
+.grid { display: grid; }
+
+.p-2 { padding: 0.5rem; }
+.p-4 { padding: 1rem; }
+.p-6 { padding: 1.5rem; }
+.p-8 { padding: 2rem; }
+
+.m-2 { margin: 0.5rem; }
+.m-4 { margin: 1rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-4 { margin-bottom: 1rem; }
+.mb-6 { margin-bottom: 1.5rem; }
+.mb-8 { margin-bottom: 2rem; }
+
+.rounded { border-radius: 0.25rem; }
+.rounded-lg { border-radius: 0.5rem; }
+.shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
