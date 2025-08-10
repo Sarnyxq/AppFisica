@@ -246,7 +246,6 @@ class Modals {
                         </div>
                         <div class="flex flex-col items-end gap-2">
                             <button id="close-modal-btn" class="text-ink-light hover:text-ink-dark text-3xl font-bold leading-none">×</button>
-                            <button id="complete-challenge-btn" class="btn-primary font-dnd text-lg py-2 px-4 rounded-lg hidden md:block">🔨 Forgia</button>
                         </div>
                     </div>
 
@@ -285,8 +284,11 @@ class Modals {
                     <div class="challenge-footer p-4 md:p-6 flex flex-col sm:flex-row justify-between items-center gap-4 bg-pergamena-dark/60">
                         <p class="text-sm md:text-lg font-bold text-ink-dark text-center sm:text-left">Ricompensa: <span class="text-gold">${challenge.exp} EXP + ${challenge.badge.icon} ${challenge.badge.name}</span></p>
                         <div class="flex gap-2 w-full sm:w-auto justify-center">
-                            <button id="complete-challenge-btn-footer" class="btn-primary font-dnd text-sm md:text-base py-2 px-4 md:px-6 rounded-lg">🔨 Forgia</button>
-                            <button id="cancel-modal-btn" class="btn-secondary py-2 px-4 rounded-lg">Annulla</button>
+                            <button id="forgia-btn" class="btn-primary font-dnd py-2 px-4 md:px-6 rounded-lg flex items-center gap-1 md:gap-2 text-sm md:text-base min-h-[44px] min-w-[88px]" aria-label="Forgia il sigillo e completa la sfida" title="Completa la sfida e ottieni ricompense">
+                                <span class="text-base md:text-lg" aria-hidden="true">🔨</span>
+                                <span class="font-semibold">Forgia</span>
+                            </button>
+                            <button id="cancel-modal-btn" class="btn-secondary py-2 px-4 rounded-lg min-h-[44px]">Annulla</button>
                         </div>
                     </div>
                 </div>
@@ -596,10 +598,32 @@ class Modals {
             }
         } else {
             // Gestione normale per modali non-storia
-            const completeBtn = this.challengeModal.querySelector('#complete-challenge-btn');
-            if (completeBtn) completeBtn.addEventListener('click', () => this.handleCompleteChallenge());
-            
             if (this.currentModalType === 'main') this.bindTabEvents();
+            
+            // Event listener per nuovo pulsante Forgia unificato
+            const forgiaBtn = this.challengeModal.querySelector('#forgia-btn');
+            if (forgiaBtn) {
+                forgiaBtn.addEventListener('click', (e) => {
+                    console.log('🔨 Forgia Button Click Event:', {
+                        challengeId: this.currentChallengeId,
+                        modalType: this.currentModalType,
+                        timestamp: new Date().toISOString()
+                    });
+                    
+                    try {
+                        this.handleCompleteChallenge();
+                        console.log('✅ handleCompleteChallenge eseguita con successo');
+                    } catch (error) {
+                        console.error('❌ Errore in handleCompleteChallenge:', error);
+                        if (window.notificationSystem) {
+                            notificationSystem.show("Errore nel completamento sfida", "error");
+                        }
+                    }
+                });
+                console.log('✅ Event listener Forgia aggiunto');
+            } else {
+                console.error('❌ Pulsante Forgia non trovato nel DOM');
+            }
             
             const textResponse = this.challengeModal.querySelector('#text-response');
             if (textResponse) {
@@ -611,9 +635,6 @@ class Modals {
             }
             
             document.addEventListener('canvasChanged', this._canvasChangeHandler = () => this.debouncedCanvasSave());
-            
-            const completeFooter = this.challengeModal.querySelector('#complete-challenge-btn-footer');
-            if (completeFooter) completeFooter.addEventListener('click', () => this.handleCompleteChallenge());
         }
         
         // Gestione ESC key per tutti i tipi di modale
