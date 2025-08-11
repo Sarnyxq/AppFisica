@@ -103,13 +103,6 @@ php -S localhost:8000
 
 ## 🧪 Testing
 
-### Test Automatizzato
-L'applicazione include uno script di test automatizzato per verificare il funzionamento del pulsante Storia:
-
-```javascript
-// Apri la console del browser e esegui:
-// Copia e incolla il contenuto di test-storia-button.js
-```
 
 ### Test Manuali
 1. **Test Base**: Apri l'applicazione e completa una sfida
@@ -174,12 +167,7 @@ Utilizza il sistema di Issues per segnalare:
 
 Per supporto e domande:
 - **Issues**: Utilizza il sistema di Issues di GitHub
-- **Documentazione**: 
-  - Consulta `istruzioni3.md` per sistema storia
-  - Consulta `istruzioni2.md` per supporto S Pen ⭐ NUOVO
-- **Test**: 
-  - Esegui `test-storia-button.js` per verifiche storia
-  - Esegui `testSPenSupport()` per verifiche S Pen ⭐ NUOVO
+
 
 ## 📄 Licenza
 
