@@ -624,6 +624,29 @@ class Modals {
             } else {
                 console.error('❌ Pulsante Forgia non trovato nel DOM');
             }
+
+            // Event listener per pulsante "Ho Completato la Pratica" (missioni secondarie)
+            const completeBtn = this.challengeModal.querySelector('#complete-challenge-btn');
+            if (completeBtn) {
+                completeBtn.addEventListener('click', (e) => {
+                    console.log('📿 Complete Practice Button Click Event:', {
+                        challengeId: this.currentChallengeId,
+                        modalType: this.currentModalType,
+                        timestamp: new Date().toISOString()
+                    });
+                    
+                    try {
+                        this.handleCompleteChallenge();
+                        console.log('✅ handleCompleteChallenge per Rito della Pratica eseguita con successo');
+                    } catch (error) {
+                        console.error('❌ Errore in handleCompleteChallenge per Rito della Pratica:', error);
+                        if (window.notificationSystem) {
+                            notificationSystem.show("Errore nel completamento del rito", "error");
+                        }
+                    }
+                });
+                console.log('✅ Event listener "Ho Completato la Pratica" aggiunto');
+            }
             
             const textResponse = this.challengeModal.querySelector('#text-response');
             if (textResponse) {
