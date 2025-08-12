@@ -117,6 +117,13 @@ body {
     0 2px 4px var(--shadow-medium),
     inset 0 1px 0 var(--gold-light);
   transition: all 0.3s ease;
+  /* Ottimizzazioni touch */
+  min-height: 44px;
+  min-width: 44px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  cursor: pointer;
+  user-select: none;
 }
 
 .btn-primary:hover {
@@ -134,16 +141,39 @@ body {
     inset 0 -1px 0 var(--gold-dark);
 }
 
+/* Touch feedback specifico per dispositivi touch */
+@media (hover: none) and (pointer: coarse) {
+  .btn-primary:active {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    transform: scale(0.98);
+  }
+}
+
 .btn-secondary {
   background: var(--pergamena);
   color: var(--ink);
   border: 2px solid var(--ink-light);
   font-weight: bold;
+  /* Ottimizzazioni touch */
+  min-height: 44px;
+  min-width: 44px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  cursor: pointer;
+  user-select: none;
 }
 
 .btn-secondary:hover {
   background: var(--pergamena-dark);
   border-color: var(--ink);
+}
+
+/* Touch feedback per btn-secondary */
+@media (hover: none) and (pointer: coarse) {
+  .btn-secondary:active {
+    background: var(--pergamena-darker);
+    transform: scale(0.98);
+  }
 }
 
 /* === BADGE E TROFEI === */

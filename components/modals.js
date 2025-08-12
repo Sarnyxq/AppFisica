@@ -22,13 +22,24 @@ class Modals {
 
     // Apri il modale della sfida
     openChallengeModal(challengeId, type = 'main') {
+        console.log('🔓 openChallengeModal chiamato:', {
+            challengeId,
+            type,
+            timestamp: new Date().toISOString()
+        });
+
         if (!this.challengeModal) {
-            console.error('Sistema modali non inizializzato!');
+            console.error('❌ Sistema modali non inizializzato!');
             return;
         }
 
         this.currentChallengeId = challengeId;
         this.currentModalType = type;
+        
+        console.log('📝 Stato modal settato:', {
+            currentChallengeId: this.currentChallengeId,
+            currentModalType: this.currentModalType
+        });
         
         // Gestione speciale per modalità storia con ID capitolo
         if (type === 'story') {
@@ -36,6 +47,7 @@ class Modals {
             const isChapterId = /^[1-9]|10$/.test(challengeId.toString());
             
             if (isChapterId) {
+                console.log('📖 Aprendo modal capitolo storia:', challengeId);
                 // È un ID di capitolo - renderizza il modale del capitolo
                 this.challengeModal.innerHTML = this.renderChapterModal(challengeId);
                 this.challengeModal.classList.remove('hidden');
@@ -48,6 +60,13 @@ class Modals {
         
         // Logica normale per sfide
         const challenge = castleData.challenges.find(c => c.id === challengeId);
+        if (!challenge) {
+            console.error('❌ Sfida non trovata:', challengeId);
+            notificationSystem.show("Sfida non trovata!", "error");
+            return;
+        }
+
+        console.log('🎯 Sfida trovata:', challenge.title, 'Tipo:', type);
         if (!challenge) {
             notificationSystem.show("Sfida non trovata!", "error");
             return;
@@ -603,10 +622,15 @@ class Modals {
             // Event listener per nuovo pulsante Forgia unificato
             const forgiaBtn = this.challengeModal.querySelector('#forgia-btn');
             if (forgiaBtn) {
-                forgiaBtn.addEventListener('click', (e) => {
-                    console.log('🔨 Forgia Button Click Event:', {
+                // Funzione comune per gestire la forgia
+                const handleForgia = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    console.log('🔨 Forgia Button Event:', {
                         challengeId: this.currentChallengeId,
                         modalType: this.currentModalType,
+                        eventType: e.type,
                         timestamp: new Date().toISOString()
                     });
                     
@@ -619,8 +643,13 @@ class Modals {
                             notificationSystem.show("Errore nel completamento sfida", "error");
                         }
                     }
-                });
-                console.log('✅ Event listener Forgia aggiunto');
+                };
+
+                // Aggiungi supporto per eventi click e touch
+                forgiaBtn.addEventListener('click', handleForgia);
+                forgiaBtn.addEventListener('touchend', handleForgia, { passive: false });
+                
+                console.log('✅ Event listener Forgia aggiunto (click + touch)');
             } else {
                 console.error('❌ Pulsante Forgia non trovato nel DOM');
             }
@@ -628,10 +657,15 @@ class Modals {
             // Event listener per pulsante "Ho Completato la Pratica" (missioni secondarie)
             const completeBtn = this.challengeModal.querySelector('#complete-challenge-btn');
             if (completeBtn) {
-                completeBtn.addEventListener('click', (e) => {
-                    console.log('📿 Complete Practice Button Click Event:', {
+                // Funzione comune per gestire il completamento
+                const handleCompletePractice = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    console.log('📿 Complete Practice Button Event:', {
                         challengeId: this.currentChallengeId,
                         modalType: this.currentModalType,
+                        eventType: e.type,
                         timestamp: new Date().toISOString()
                     });
                     
@@ -644,8 +678,13 @@ class Modals {
                             notificationSystem.show("Errore nel completamento del rito", "error");
                         }
                     }
-                });
-                console.log('✅ Event listener "Ho Completato la Pratica" aggiunto');
+                };
+
+                // Aggiungi supporto per eventi click e touch
+                completeBtn.addEventListener('click', handleCompletePractice);
+                completeBtn.addEventListener('touchend', handleCompletePractice, { passive: false });
+                
+                console.log('✅ Event listener "Ho Completato la Pratica" aggiunto (click + touch)');
             }
             
             const textResponse = this.challengeModal.querySelector('#text-response');
@@ -751,31 +790,61 @@ class Modals {
     }
 
     handleCompleteChallenge() {
+        console.log('🔧 handleCompleteChallenge chiamato:', {
+            currentModalType: this.currentModalType,
+            currentChallengeId: this.currentChallengeId,
+            gameStateExists: !!window.gameState,
+            notificationSystemExists: !!window.notificationSystem,
+            timestamp: new Date().toISOString()
+        });
+
         if (this.currentModalType === 'side') {
+            console.log('📿 Gestione missione secondaria...');
+            if (!window.gameState) {
+                console.error('❌ gameState non disponibile');
+                return;
+            }
+            
             const success = gameState.completeSideQuest(this.currentChallengeId);
+            console.log('📿 Risultato completeSideQuest:', success);
+            
             if (success) {
                 this.closeChallengeModal();
-                notificationSystem.show("Rito della Pratica completato! La tua dedizione è stata ricompensata.", "success");
+                if (window.notificationSystem) {
+                    notificationSystem.show("Rito della Pratica completato! La tua dedizione è stata ricompensata.", "success");
+                }
             }
             return;
         }
+        
+        console.log('🔨 Gestione sfida principale...');
         const textResponse = this.challengeModal.querySelector('#text-response');
         const text = textResponse ? textResponse.value.trim() : '';
         let drawing = '';
         if (window.canvasComponent) drawing = canvasComponent.getCanvasData();
+        
+        console.log('📝 Dati sfida:', { text: text.length + ' caratteri', drawing: drawing.length + ' caratteri' });
+        
         if (!text && !drawing) {
-            notificationSystem.show("Scrivi qualche annotazione o disegna un sigillo prima di procedere!", "warning");
+            if (window.notificationSystem) {
+                notificationSystem.show("Scrivi qualche annotazione o disegna un sigillo prima di procedere!", "warning");
+            }
             return;
         }
+        
         const challengeData = { text, drawing };
         const success = gameState.completeChallenge(this.currentChallengeId, challengeData);
+        console.log('🔨 Risultato completeChallenge:', success);
+        
         if (success) {
             this.closeChallengeModal();
             
             // Mostra la storia di completamento se disponibile (pattern ApprendimentoMatematica1)
             this.showCompletionStory(this.currentChallengeId);
             
-            notificationSystem.show("Sigillo forgiato con successo! La conoscenza è ora tua.", "success");
+            if (window.notificationSystem) {
+                notificationSystem.show("Sigillo forgiato con successo! La conoscenza è ora tua.", "success");
+            }
         }
     }
 
